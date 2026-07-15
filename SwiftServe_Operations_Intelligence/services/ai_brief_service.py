@@ -1,15 +1,16 @@
-"""Gemini-powered morning brief service for the SwiftServe dashboard.
-
-Keeping AI integration here makes setup and API failures easy to diagnose without
-mixing Gemini code into the Streamlit interface.
+"""
+Gemini-powered morning brief service for the SwiftServe dashboard.
+Works on:
+1. Local PC using .env
+2. Streamlit Cloud using Secrets
 """
 
 import os
 from pathlib import Path
 
 import pandas as pd
+import streamlit as st
 from dotenv import load_dotenv
-
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = PROJECT_ROOT / ".env"
@@ -17,116 +18,162 @@ DEFAULT_MODEL = "gemini-3.5-flash"
 
 
 class MorningBriefError(RuntimeError):
-    """An actionable error that can be shown safely in the dashboard."""
+    pass
 
 
-def _load_environment() -> None:
-    """Load the project's .env file each time status is checked."""
-    load_dotenv(ENV_FILE, override=False)
+def _load_environment():
+    """Load .env only if it exists."""
+    if ENV_FILE.exists():
+        load_dotenv(ENV_FILE, override=False)
 
 
-def get_ai_status() -> dict:
-    """Return an explicit readiness state for the dashboard health card."""
+def get_ai_status():
+
     _load_environment()
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
 
-    if not ENV_FILE.exists():
-        return {
-            "ready": False,
-            "label": "Missing .env file",
-            "message": "Create .env in the project root, then add GEMINI_API_KEY=your_key.",
-        }
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        try:
+            api_key = st.secrets["GEMINI_API_KEY"]
+        except Exception:
+            api_key = ""
+
+    model = os.getenv("GEMINI_MODEL")
+
+    if not model:
+        try:
+            model = st.secrets["GEMINI_MODEL"]
+        except Exception:
+            model = DEFAULT_MODEL
+
     if not api_key:
         return {
             "ready": False,
-            "label": "API key needed",
-            "message": "Add GEMINI_API_KEY=your_key to .env, save it, and restart Streamlit.",
+            "label": "API Key Missing",
+            "message": "Configure GEMINI_API_KEY in .env or Streamlit Secrets.",
         }
 
     try:
-        from google import genai  # noqa: F401
+        from google import genai
     except ImportError:
         return {
             "ready": False,
-            "label": "Gemini SDK missing",
-            "message": "Run: .\\.venv\\Scripts\\python.exe -m pip install google-genai",
+            "label": "Gemini SDK Missing",
+            "message": "Run: pip install google-genai",
         }
 
     return {
         "ready": True,
-        "label": "Gemini ready",
-        "message": f"Model: {os.getenv('GEMINI_MODEL', DEFAULT_MODEL)}",
+        "label": "Gemini Ready",
+        "message": f"Model: {model}",
     }
 
 
-def _build_prompt(summary: dict, risks: pd.DataFrame, equipment: pd.DataFrame) -> str:
+def _build_prompt(summary, risks, equipment):
+
     risk_rows = risks.head(5)[
-        ["work_order_id", "customer_name", "location", "priority", "risk_flag", "elapsed_hours"]
+        [
+            "work_order_id",
+            "customer_name",
+            "location",
+            "priority",
+            "risk_flag",
+            "elapsed_hours",
+        ]
     ].to_dict(orient="records")
+
     equipment_rows = equipment.head(5).to_dict(orient="records")
+
     sla = summary["sla_compliance"]
 
     return f"""
-You are the operations chief of staff for SwiftServe, a field-service company.
-Write a concise executive morning brief using only the data supplied below.
+You are the Operations Head of SwiftServe.
 
-Use these exact headings:
-1. Situation now
-2. Immediate actions
-3. Watch items
+Write a professional executive morning briefing.
 
-Rules:
-- Be concrete, prioritised, and concise.
-- Do not invent facts, dates, technicians, or causes.
-- Mention work-order IDs when relevant.
-- Limit the response to 220 words.
+Use exactly these headings:
 
-Operational snapshot:
-- Open tickets: {summary['open_tickets']['count']}
-- Average SLA compliance: {sla['overall_avg_compliance_percent']}%
-- Dispatch average response time: {summary['dispatch_performance']['average_response_time_hours']} hours
-- Dispatch average customer feedback: {summary['dispatch_performance']['average_customer_feedback']} / 5
-- Tickets at risk: {risk_rows}
-- Equipment watchlist: {equipment_rows}
-- Customers below SLA threshold: {sla['customers_below_threshold']}
-""".strip()
+1. Situation Now
+2. Immediate Actions
+3. Watch Items
+
+Maximum 220 words.
+
+Open Tickets:
+{summary['open_tickets']['count']}
+
+Average SLA Compliance:
+{sla['overall_avg_compliance_percent']}%
+
+Average Dispatch Response:
+{summary['dispatch_performance']['average_response_time_hours']} hours
+
+Average Customer Rating:
+{summary['dispatch_performance']['average_customer_feedback']}
+
+Tickets at Risk:
+{risk_rows}
+
+Equipment Watchlist:
+{equipment_rows}
+
+Customers below SLA:
+{sla['customers_below_threshold']}
+"""
 
 
-def _friendly_error(error: Exception) -> str:
+def _friendly_error(error):
+
     text = str(error)
-    upper = text.upper()
-    if any(token in upper for token in ("API_KEY", "UNAUTHENTICATED", "PERMISSION_DENIED")):
-        return "Gemini rejected the API key. Check GEMINI_API_KEY in .env and restart Streamlit."
-    if "NOT_FOUND" in upper or "MODEL" in upper:
-        return (
-            "The configured Gemini model is unavailable to this key. "
-            "Check GEMINI_MODEL in .env."
-        )
-    if any(token in upper for token in ("429", "RESOURCE_EXHAUSTED", "RATE")):
-        return "Gemini rate limit reached. Wait a moment, then generate the brief again."
-    if any(token in upper for token in ("CONNECTION", "TIMEOUT", "NETWORK")):
-        return "Gemini could not be reached. Check your internet connection and try again."
-    return f"Gemini could not generate the brief: {text[:220]}"
+
+    if "API_KEY" in text.upper():
+        return "Invalid Gemini API Key."
+
+    if "MODEL" in text.upper():
+        return "Gemini model not found."
+
+    if "429" in text:
+        return "Gemini rate limit exceeded."
+
+    return text
 
 
-def generate_morning_brief(summary: dict, risks: pd.DataFrame, equipment: pd.DataFrame) -> str:
-    """Generate one brief or raise a clear, user-facing MorningBriefError."""
+def generate_morning_brief(summary, risks, equipment):
+
     status = get_ai_status()
+
     if not status["ready"]:
         raise MorningBriefError(status["message"])
 
     try:
+
         from google import genai
 
-        client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        api_key = os.getenv("GEMINI_API_KEY")
+
+        if not api_key:
+            api_key = st.secrets["GEMINI_API_KEY"]
+
+        model = os.getenv("GEMINI_MODEL")
+
+        if not model:
+            model = st.secrets.get("GEMINI_MODEL", DEFAULT_MODEL)
+
+        client = genai.Client(api_key=api_key)
+
         response = client.models.generate_content(
-            model=os.getenv("GEMINI_MODEL", DEFAULT_MODEL),
+            model=model,
             contents=_build_prompt(summary, risks, equipment),
         )
+
         if not response.text:
-            raise MorningBriefError("Gemini returned an empty brief. Please try again.")
+            raise MorningBriefError("Gemini returned an empty response.")
+
         return response.text.strip()
+
     except MorningBriefError:
         raise
-    except Exception as error:
-        raise MorningBriefError(_friendly_error(error)) from error
+
+    except Exception as e:
+        raise MorningBriefError(_friendly_error(e))
