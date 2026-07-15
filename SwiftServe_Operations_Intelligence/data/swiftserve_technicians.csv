@@ -1,0 +1,9 @@
+technician_id,name,location,status,skills,total_assignments,completed_assignments,avg_response_time_hours
+TECH001,Rajesh Kumar,Mumbai Central,Active,"Installation, Repairs, Diagnostics",24,22,2.5
+TECH002,Priya Sharma,Mumbai West,Active,"Repairs, Maintenance",18,17,3.1
+TECH003,Amit Patel,Pune North,Active,"Installation, Diagnostics",15,14,2.2
+TECH004,Sanjana Singh,Bangalore,Active,"Maintenance, Troubleshooting",20,19,3.8
+TECH005,Vikram Reddy,Hyderabad,Inactive,"Installation, Repairs",12,10,4.2
+TECH006,Neha Gupta,Mumbai East,Active,"Diagnostics, Preventive Maintenance",22,21,2.8
+TECH007,Arjun Nair,Pune South,Active,"Repairs, Installation",16,15,3.3
+TECH008,Divya Iyer,Chennai,Active,"Troubleshooting, Maintenance",19,18,3.5

@@ -1,0 +1,9 @@
+equipment_id,customer_id,equipment_name,equipment_type,status,location,install_date,last_maintenance,next_maintenance_due,uptime_percent,critical_alerts
+EQ001,CUST001,PowerSystem A1,Power Supply,Active,Mumbai Central,2022-03-15,2024-10-20,2024-12-20,99.2,0
+EQ002,CUST002,ComputeNode B2,Server,Active,Mumbai West,2023-01-10,2024-09-15,2024-11-15,98.8,1
+EQ003,CUST003,NetworkGateway C3,Network Device,Degraded,Pune North,2021-06-22,2024-08-30,2024-10-30,95.3,3
+EQ004,CUST004,StorageArray D4,Storage System,Active,Bangalore,2023-05-18,2024-10-10,2024-12-10,99.5,0
+EQ005,CUST005,BackupUnit E5,Backup System,Inactive,Hyderabad,2020-11-05,2024-01-20,2024-03-20,87.1,5
+EQ006,CUST006,CoolingSystem F6,HVAC,Active,Mumbai East,2022-09-12,2024-10-25,2024-12-25,98.9,0
+EQ007,CUST007,UPS Unit G7,Power Backup,Active,Pune South,2023-02-28,2024-09-20,2024-11-20,99.1,0
+EQ008,CUST008,FirewallDevice H8,Security Device,Active,Chennai,2022-07-08,2024-10-15,2024-12-15,99.4,0

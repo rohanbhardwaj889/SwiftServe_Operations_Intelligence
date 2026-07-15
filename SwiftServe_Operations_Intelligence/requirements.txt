@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+plotly
+pyodbc
+openai
+python-dotenv
+matplotlib
+scikit-learn
+google-genai
+streamlit-autorefresh
+reportlab

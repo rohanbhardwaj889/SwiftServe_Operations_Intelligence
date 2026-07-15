@@ -1,0 +1,11 @@
+dispatch_id,work_order_id,technician_id,dispatch_time,arrival_time,departure_time,status,notes,customer_feedback_rating
+DISP001,WO001,TECH001,2024-11-02 08:00,2024-11-02 08:45,2024-11-02 12:30,Completed,Replaced faulty power module. Customer satisfied.,5
+DISP002,WO002,TECH002,2024-11-01 09:00,2024-11-03 10:15,2024-11-03 16:45,Completed,Routine maintenance completed. All systems nominal.,4
+DISP003,WO003,TECH003,2024-11-02 07:00,2024-11-02 09:30,2024-11-04 17:00,In Progress,Installation ongoing. Expected completion Nov 4.,NULL
+DISP004,WO004,TECH004,2024-11-02 14:30,2024-11-02 14:45,2024-11-02 17:00,Completed,Emergency fix applied. Network restored.,5
+DISP005,WO005,TECH005,2024-11-03 10:00,NULL,NULL,On Hold,Waiting for customer availability. Rescheduled for Nov 10.,NULL
+DISP006,WO006,TECH006,2024-11-03 16:00,2024-11-03 16:15,2024-11-03 19:15,Completed,Critical system restored. Zero downtime impact.,5
+DISP007,WO007,TECH007,2024-11-04 08:30,2024-11-04 08:45,NULL,In Progress,Diagnostics underway. Issue identified - parts ordered.,NULL
+DISP008,WO008,TECH008,2024-11-04 11:00,2024-11-05 09:00,2024-11-05 16:30,Completed,Maintenance completed ahead of schedule.,4
+DISP009,WO009,TECH001,2024-11-05 06:00,2024-11-05 07:30,NULL,In Progress,Installation Day 1 complete. Continuing Nov 6.,NULL
+DISP010,WO010,TECH002,2024-11-05 15:00,2024-11-05 15:20,2024-11-05 16:45,Completed,Emergency resolved. Database restored successfully.,5

@@ -1,0 +1,11 @@
+work_order_id,customer_name,location,issue_type,priority,status,assigned_technician,created_date,due_date,completed_date,resolution_time_hours,estimated_cost_inr
+WO001,ABC Manufacturing,Mumbai Central,Equipment Failure,High,Completed,TECH001,2024-11-01,2024-11-02,2024-11-02,4,8500
+WO002,XYZ Logistics,Mumbai West,Maintenance Check,Medium,Completed,TECH002,2024-11-01,2024-11-05,2024-11-03,6,3200
+WO003,PQR Services,Pune North,Installation,High,In Progress,TECH003,2024-11-02,2024-11-04,NULL,8,15000
+WO004,LMN Retail,Bangalore,Troubleshooting,Critical,Completed,TECH004,2024-11-02,2024-11-02,2024-11-02,2,5800
+WO005,DEF Hospitals,Hyderabad,Preventive Maintenance,Low,On Hold,TECH005,2024-11-03,2024-11-10,NULL,NULL,4500
+WO006,GHI Finance,Mumbai East,Emergency Repair,Critical,Completed,TECH006,2024-11-03,2024-11-03,2024-11-03,3,12000
+WO007,JKL Transport,Pune South,Equipment Diagnostics,Medium,In Progress,TECH007,2024-11-04,2024-11-06,NULL,12,6700
+WO008,MNO Education,Chennai,Maintenance Check,Low,Completed,TECH008,2024-11-04,2024-11-08,2024-11-05,7,2500
+WO009,STU Energy,Mumbai Central,Installation,High,In Progress,TECH001,2024-11-05,2024-11-07,NULL,16,18000
+WO010,VWX Construction,Mumbai West,Emergency Repair,Critical,Completed,TECH002,2024-11-05,2024-11-05,2024-11-05,1.5,9200

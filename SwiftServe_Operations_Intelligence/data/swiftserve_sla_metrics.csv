@@ -1,0 +1,9 @@
+metric_id,customer_id,customer_name,sla_tier,response_time_target_hours,resolution_time_target_hours,monthly_uptime_target_percent,avg_response_time_actual,avg_resolution_time_actual,actual_uptime_percent,sla_breaches_this_month,sla_compliance_percent
+SLA001,CUST001,ABC Manufacturing,Premium,2,8,99.5,2.3,7.8,99.4,0,100
+SLA002,CUST002,XYZ Logistics,Standard,4,24,99.0,3.9,18.5,98.8,1,95
+SLA003,CUST003,PQR Services,Premium,2,8,99.5,2.8,9.2,95.3,2,85
+SLA004,CUST004,LMN Retail,Enterprise,1,4,99.9,1.5,3.8,99.5,0,100
+SLA005,CUST005,DEF Hospitals,Enterprise,1,4,99.9,2.1,5.5,87.1,5,72
+SLA006,CUST006,GHI Finance,Premium,2,8,99.5,2.2,7.1,98.9,0,100
+SLA007,CUST007,JKL Transport,Standard,4,24,99.0,3.5,19.8,99.1,0,100
+SLA008,CUST008,MNO Education,Basic,8,48,98.5,6.8,32.5,99.4,0,100
