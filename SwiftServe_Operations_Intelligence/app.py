@@ -48,6 +48,10 @@ def pill_class(value: str) -> str:
         "AT_RISK": "warning",
         "ON_TRACK": "good",
         "NO_SLA_DATA": "muted",
+        "OVERDUE": "danger",
+        "DUE_SOON": "warning",
+        "SCHEDULED": "good",
+        "NO_SCHEDULE": "muted",
         "Active": "good",
         "Inactive": "muted",
         "Degraded": "warning",
@@ -221,6 +225,7 @@ st.markdown(
       .brief,.recommendation-panel,.system-panel{padding:17px}.brief-item,.recommendation-item{padding:13px 0;border-top:1px solid rgba(148,163,184,.11)}.brief-item:first-of-type,.recommendation-item:first-of-type{border-top:0}.brief-top{display:flex;align-items:center;gap:8px;color:#f4f8ff;font-size:12px;font-weight:680}.brief-priority{margin-left:auto;color:#fdcbd2;background:rgba(190,24,93,.16);padding:3px 6px;border-radius:99px;font-size:9px}.brief-copy,.rec-detail{color:#8fa2bc;font-size:11px;line-height:1.45;margin:6px 0 0 15px}.brief-dot{width:7px;height:7px;border-radius:50%;background:var(--rose);box-shadow:0 0 10px rgba(251,113,133,.8)}.rec-top{display:flex;align-items:center;gap:8px;color:#f1f6ff;font-size:12px;font-weight:680}.rec-type{font-size:9px;letter-spacing:.04em;border-radius:99px;padding:3px 7px}.rec-type.danger{color:#fecdd3;background:rgba(190,24,93,.16)}.rec-type.warning{color:#fde5a7;background:rgba(180,113,12,.17)}.rec-type.violet{color:#dcd6ff;background:rgba(109,92,204,.18)}.rec-type.good{color:#bdf5d6;background:rgba(17,123,81,.17)}.empty-state{padding:30px 0;color:#9fb4ca;font-size:12px}[data-testid="stVerticalBlockBorderWrapper"]{border:1px solid var(--line)!important;border-radius:16px!important;background:linear-gradient(145deg,rgba(15,28,50,.70),rgba(10,19,35,.54))!important;box-shadow:0 18px 38px rgba(1,9,23,.16)!important}
       .chart-shell{border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(15,28,50,.66),rgba(9,18,33,.48));padding:15px 14px 5px;box-shadow:0 18px 38px rgba(1,9,23,.14)}.chart-label{color:#edf4ff;font-size:13px;font-weight:680}.chart-note{color:#8195b2;font-size:10px;margin-top:4px}.watch-list{padding:0 17px}.watch-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:14px 0;border-top:1px solid rgba(148,163,184,.11)}.watch-row:first-child{border-top:0}.watch-name{color:#e9f1fc;font-size:12px;font-weight:650}.watch-meta{color:#8296b1;font-size:10px;margin-top:4px}.watch-number{color:#f7cad1;font-size:15px;font-weight:760;text-align:right}.watch-caption{color:#7f92ac;font-size:9px;margin-top:3px;text-align:right}.team-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.team-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:rgba(15,27,48,.56);transition:transform .18s ease,border-color .18s ease}.team-card:hover{transform:translateY(-2px);border-color:rgba(97,218,251,.31)}.team-name{color:#ecf4ff;font-size:12px;font-weight:680}.team-meta{color:#8094af;font-size:10px;margin-top:4px}.team-rate{color:#79e8ba;font-size:18px;font-weight:760;letter-spacing:-.04em;margin-top:13px}.team-rate span{color:#7f91ab;font-size:9px;font-weight:500;letter-spacing:0}.health-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.health-item{padding:13px;border:1px solid var(--line);border-radius:12px;background:rgba(10,21,39,.48)}.health-label{color:#8295af;font-size:10px}.health-value{color:#ecf5ff;font-size:13px;font-weight:680;margin-top:7px}.health-value.good{color:#9df0c8}.health-value.warning{color:#fde5a7}.ai-copy{color:#bcd0e6;font-size:13px;line-height:1.7}.ai-copy h1,.ai-copy h2,.ai-copy h3{color:#eff6ff;font-size:15px;margin:15px 0 5px}.footer-note{color:#6f829e;font-size:10px;padding:22px 0 4px;border-top:1px solid var(--line);margin-top:28px}
       .glass-panel.system-panel:empty,.chart-shell:empty{display:none}.ai-state-card{padding:18px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(15,28,50,.70),rgba(10,19,35,.54));box-shadow:0 18px 38px rgba(1,9,23,.16)}.ai-state-title{color:#edf4ff;font-size:13px;font-weight:680;margin-bottom:6px}.ai-state-copy{color:#91a4bd;font-size:11px;line-height:1.55}
+      .mode-note{color:#8195b2;font-size:11px;margin:2px 0 16px}
       @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}@media(max-width:900px){.metric-grid{grid-template-columns:repeat(2,1fr)}.hero-grid{align-items:flex-start}.health-orbit{flex-basis:118px;width:118px;height:118px}.health-inner{width:93px;height:93px}.hero h1{font-size:27px}.queue-head,.queue-row{grid-template-columns:70px 1fr 80px}.queue-row .ticket-meta,.queue-head .hide-small{display:none}.team-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.block-container{padding:1rem}.metric-grid{grid-template-columns:1fr 1fr;gap:8px}.metric-card{padding:12px;min-height:90px}.hero{padding:24px 22px}.hero-grid{display:block}.health-orbit{margin-top:22px}.queue-head,.queue-row{grid-template-columns:66px 1fr 75px;padding-left:12px;padding-right:12px}.queue-row .customer-name{font-size:11px}.section-detail{display:none}.health-list{grid-template-columns:1fr}}
     </style>
     """,
@@ -256,6 +261,10 @@ equipment_df = summary["critical_equipment"].copy()
 technicians_df = summary["technician_performance"].copy()
 dispatch = summary["dispatch_performance"]
 zones_df = summary["zone_summary"].copy()
+maintenance_df = summary["maintenance_due"].copy()
+skill_df = summary["skill_match"].copy()
+cycle_df = summary["cycle_time_trends"].copy()
+bottleneck_df = summary["bottleneck_analysis"].copy()
 
 locations = sorted(all_risk_df["location"].dropna().unique().tolist())
 priorities = sorted(all_risk_df["priority"].dropna().unique().tolist())
@@ -282,6 +291,7 @@ risk_df["_rank"] = risk_df["risk_flag"].map(risk_rank).fillna(4)
 risk_df = risk_df.sort_values(["_rank", "elapsed_hours"])
 
 global_breaches = all_risk_df.loc[all_risk_df["risk_flag"].eq("BREACHED")]
+overdue_by_due_date = all_risk_df.loc[all_risk_df["is_overdue"]]
 at_risk_count = int(all_risk_df["risk_flag"].eq("AT_RISK").sum())
 compliance = float(sla["overall_avg_compliance_percent"])
 ai_status = get_ai_status()
@@ -356,140 +366,292 @@ html_block(
     + "</div>"
 )
 
-left, right = st.columns([1.75, 1], gap="large")
-with left:
-    html_block('<div class="section-top"><div><div class="section-kicker">PRIORITY QUEUE</div><div class="section-title">Work requiring a decision</div></div><div class="section-detail">Filtered by your workspace controls</div></div>')
-    queue_rows = []
-    for _, ticket in risk_df.head(8).iterrows():
-        target = ticket["resolution_time_target_hours"]
-        elapsed = ticket["elapsed_hours"]
-        sla_text = "No target" if pd.isna(target) else f"{number(elapsed, 1)}h elapsed"
-        queue_rows.append(
-            f"""<div class="queue-row"><div class="ticket-id">{escape(str(ticket['work_order_id']))}</div><div><div class="customer-name">{escape(str(ticket['customer_name']))}</div><div class="ticket-site">{escape(str(ticket['location']))}</div></div><div class="ticket-meta">{escape(sla_text)}</div><div class="ticket-meta">{escape(str(ticket['priority']))}</div><div><span class="status-pill {pill_class(ticket['risk_flag'])}">{escape(str(ticket['risk_flag']).replace('_', ' '))}</span></div></div>"""
-        )
-    if queue_rows:
-        html_block('<div class="glass-panel"><div class="queue-head"><div>CASE</div><div>CUSTOMER / SITE</div><div class="hide-small">ELAPSED</div><div class="hide-small">PRIORITY</div><div>STATUS</div></div>' + "".join(queue_rows) + "</div>")
-    else:
-        html_block('<div class="glass-panel"><div class="empty-state">No work orders match the selected filters.</div></div>')
+act_tab, observe_tab, explore_tab = st.tabs(
+    ["🔧  ACT · Immediate Action", "📊  OBSERVE · Historical Analysis", "🧭  EXPLORE · Strategic Intelligence"]
+)
 
-with right:
-    html_block('<div class="section-top"><div><div class="section-kicker">RECOMMENDATION ENGINE</div><div class="section-title">What to do next</div></div></div>')
-    recommendation_html = []
-    for item in recommendations:
-        recommendation_html.append(
-            f'<div class="recommendation-item"><div class="rec-top"><span class="rec-type {item["tone"]}">{escape(item["type"].upper())}</span>{escape(item["title"])}</div><div class="rec-detail">{escape(item["detail"])}</div></div>'
-        )
-    html_block('<div class="glass-panel recommendation-panel">' + "".join(recommendation_html) + "</div>")
+# =====================================================================
+# ACT MODE — reactive: what needs a decision right now?
+# =====================================================================
+with act_tab:
+    html_block('<div class="mode-note">Overdue work, SLA breaches, critical equipment, and the recommended next move — everything a dispatcher needs before assigning new work.</div>')
 
-st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-ai_left, ai_right = st.columns([1.35, 1], gap="large")
-with ai_left:
-    html_block('<div class="section-top"><div><div class="section-kicker">AI MORNING BRIEF</div><div class="section-title">Executive narrative, on demand</div></div><div class="section-detail">Gemini · aggregate KPI context</div></div><div class="glass-panel system-panel">')
-    if not gemini_ready:
-        html_block(f'<div class="ai-state-card"><div class="ai-state-title">Connect Gemini to generate the morning brief</div><div class="ai-state-copy">{escape(ai_status["message"])}</div></div>')
-    else:
-        if st.button("Generate AI morning brief", type="primary", key="generate_brief"):
-            try:
-                with st.spinner("Gemini is preparing the morning brief..."):
-                        st.session_state["morning_brief"] = generate_morning_brief(summary, all_risk_df, equipment_df)
-            except Exception as error:
-                st.session_state["morning_brief_error"] = str(error)
-            if st.session_state.get("morning_brief_error"):
-                st.error(st.session_state["morning_brief_error"])
-            elif st.session_state.get("morning_brief"):
-                st.markdown(st.session_state["morning_brief"])
+    left, right = st.columns([1.75, 1], gap="large")
+    with left:
+        html_block('<div class="section-top"><div><div class="section-kicker">PRIORITY QUEUE</div><div class="section-title">Work requiring a decision</div></div><div class="section-detail">Filtered by your workspace controls</div></div>')
+        queue_rows = []
+        for _, ticket in risk_df.head(8).iterrows():
+            target = ticket["resolution_time_target_hours"]
+            elapsed = ticket["elapsed_hours"]
+            sla_text = "No target" if pd.isna(target) else f"{number(elapsed, 1)}h elapsed"
+            overdue_tag = ' <span class="status-pill danger" style="margin-left:6px">PAST DUE_DATE</span>' if ticket["is_overdue"] else ""
+            queue_rows.append(
+                f"""<div class="queue-row"><div class="ticket-id">{escape(str(ticket['work_order_id']))}</div><div><div class="customer-name">{escape(str(ticket['customer_name']))}</div><div class="ticket-site">{escape(str(ticket['location']))}</div></div><div class="ticket-meta">{escape(sla_text)}</div><div class="ticket-meta">{escape(str(ticket['priority']))}</div><div><span class="status-pill {pill_class(ticket['risk_flag'])}">{escape(str(ticket['risk_flag']).replace('_', ' '))}</span>{overdue_tag}</div></div>"""
+            )
+        if queue_rows:
+            html_block('<div class="glass-panel"><div class="queue-head"><div>CASE</div><div>CUSTOMER / SITE</div><div class="hide-small">ELAPSED</div><div class="hide-small">PRIORITY</div><div>STATUS</div></div>' + "".join(queue_rows) + "</div>")
         else:
-            html_block('<div class="empty-state">Generate a concise leadership briefing from the current operational snapshot.</div>')
-    html_block("</div>")
+            html_block('<div class="glass-panel"><div class="empty-state">No work orders match the selected filters.</div></div>')
+        st.caption(f"{len(overdue_by_due_date)} open work order(s) are past their contractual due_date (independent of SLA-window risk above).")
 
-with ai_right:
-    html_block('<div class="section-top"><div><div class="section-kicker">SYSTEM HEALTH</div><div class="section-title">Platform readiness</div></div></div><div class="glass-panel system-panel"><div class="health-list">')
-    health_items = [
-        ("Data source", "SQL connected", "good"),
-        ("AI briefing", "Gemini ready" if gemini_ready else "API key needed", "good" if gemini_ready else "warning"),
-        ("Refresh cadence", "5 minutes" if auto_refresh else "Manual", "good" if auto_refresh else "warning"),
-    ]
-    health_html = "".join(
-        f'<div class="health-item"><div class="health-label">{label}</div><div class="health-value {tone}">{value}</div></div>'
-        for label, value, tone in health_items
-    )
-    html_block(f'<div class="glass-panel system-panel"><div class="health-list">{health_html}</div></div>')
-    html_block("</div></div>")
+    with right:
+        html_block('<div class="section-top"><div><div class="section-kicker">RECOMMENDATION ENGINE</div><div class="section-title">What to do next</div></div></div>')
+        recommendation_html = []
+        for item in recommendations:
+            recommendation_html.append(
+                f'<div class="recommendation-item"><div class="rec-top"><span class="rec-type {item["tone"]}">{escape(item["type"].upper())}</span>{escape(item["title"])}</div><div class="rec-detail">{escape(item["detail"])}</div></div>'
+            )
+        html_block('<div class="glass-panel recommendation-panel">' + "".join(recommendation_html) + "</div>")
 
-st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
-chart_left, chart_right = st.columns(2, gap="large")
-with chart_left:
-    html_block('<div class="chart-shell"><div class="chart-label">Operational load by location</div><div class="chart-note">Open cases compared with overdue work orders</div>')
-    zone_chart_data = zones_df.sort_values(["overdue_tickets", "open_tickets"], ascending=False)
-    workload = go.Figure()
-    workload.add_bar(
-        name="Open",
-        x=zone_chart_data["location"],
-        y=zone_chart_data["open_tickets"],
-        marker_color="#61dafb",
-        marker_line_width=0,
-        hovertemplate="%{x}<br>Open work orders: %{y}<extra></extra>",
-    )
-    workload.add_bar(
-        name="Overdue",
-        x=zone_chart_data["location"],
-        y=zone_chart_data["overdue_tickets"],
-        marker_color="#fb7185",
-        marker_line_width=0,
-        hovertemplate="%{x}<br>Overdue work orders: %{y}<extra></extra>",
-    )
-    workload.update_layout(barmode="group", yaxis_title="Work orders", legend={"orientation": "h", "y": 1.12})
-    workload.update_layout(showlegend=True)
-    st.plotly_chart(plot_style(workload), use_container_width=True, config={"displayModeBar": False})
-    html_block("</div>")
+    st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+    ai_left, ai_right = st.columns([1.35, 1], gap="large")
+    with ai_left:
+        html_block('<div class="section-top"><div><div class="section-kicker">AI MORNING BRIEF</div><div class="section-title">Executive narrative, on demand</div></div><div class="section-detail">Gemini · aggregate KPI context</div></div><div class="glass-panel system-panel">')
+        if not gemini_ready:
+            html_block(f'<div class="ai-state-card"><div class="ai-state-title">Connect Gemini to generate the morning brief</div><div class="ai-state-copy">{escape(ai_status["message"])}</div></div>')
+        else:
+            if st.button("Generate AI morning brief", type="primary", key="generate_brief"):
+                try:
+                    with st.spinner("Gemini is preparing the morning brief..."):
+                            st.session_state["morning_brief"] = generate_morning_brief(summary, all_risk_df, equipment_df)
+                except Exception as error:
+                    st.session_state["morning_brief_error"] = str(error)
+                if st.session_state.get("morning_brief_error"):
+                    st.error(st.session_state["morning_brief_error"])
+                elif st.session_state.get("morning_brief"):
+                    st.markdown(st.session_state["morning_brief"])
+            else:
+                html_block('<div class="empty-state">Generate a concise leadership briefing from the current operational snapshot.</div>')
+        html_block("</div>")
 
-with chart_right:
-    html_block('<div class="chart-shell"><div class="chart-label">Customer confidence</div><div class="chart-note">SLA compliance across active accounts</div>')
-    customers = sla["all_customers"].sort_values("sla_compliance_percent")
-    health_chart = px.bar(
-        customers,
-        x="sla_compliance_percent",
-        y="customer_name",
-        orientation="h",
-        text="sla_compliance_percent",
-        color="sla_compliance_percent",
-        color_continuous_scale=["#fb7185", "#f8bd5a", "#72e6b0"],
-        range_color=[70, 100],
-        labels={"sla_compliance_percent": "Compliance (%)", "customer_name": ""},
-    )
-    health_chart.update_traces(texttemplate="%{text:.0f}%", textposition="outside", hovertemplate="%{y}<br>SLA compliance: %{x:.1f}%<extra></extra>")
-    health_chart.update_layout(coloraxis_showscale=False, xaxis={"range": [65, 108]}, yaxis_title=None)
-    st.plotly_chart(plot_style(health_chart), use_container_width=True, config={"displayModeBar": False})
-    html_block("</div>")
-
-st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
-bottom_left, bottom_right = st.columns([1.1, 1], gap="large")
-with bottom_left:
-    html_block('<div class="section-top"><div><div class="section-kicker">ASSET HEALTH</div><div class="section-title">Equipment watchlist</div></div><div class="section-detail">Critical alerts and status</div></div><div class="glass-panel"><div class="watch-list">')
-    if equipment_df.empty:
-        html_block('<div class="empty-state">No assets are in a critical state.</div>')
-    else:
-        rows = []
-        for _, asset in equipment_df.sort_values("critical_alerts", ascending=False).iterrows():
-            rows.append(f'<div class="watch-row"><div><div class="watch-name">{escape(str(asset["equipment_name"]))}</div><div class="watch-meta">{escape(str(asset["equipment_id"]))} · {escape(str(asset["status"]))}</div></div><div><div class="watch-number">{number(asset["critical_alerts"])}</div><div class="watch-caption">critical alerts</div></div></div>')
-        html_block("".join(rows))
-    html_block("</div></div>")
-
-with bottom_right:
-    html_block('<div class="section-top"><div><div class="section-kicker">DRILL DOWN</div><div class="section-title">Inspect a work order</div></div><div class="section-detail">Filtered priority queue</div></div><div class="glass-panel system-panel">')
-    if risk_df.empty:
-        html_block('<div class="empty-state">Change the filters to select a work order.</div>')
-    else:
-        selected_id = st.selectbox("Choose a work order", risk_df["work_order_id"].tolist(), label_visibility="collapsed")
-        selected_ticket = risk_df.loc[risk_df["work_order_id"].eq(selected_id)].iloc[0]
-        target = selected_ticket["resolution_time_target_hours"]
-        target_text = "No SLA target available" if pd.isna(target) else f"{number(target, 1)} hour resolution target"
-        html_block(
-            f"""
-            <div class="brief-item"><div class="brief-top"><span class="brief-dot"></span>{escape(str(selected_ticket['work_order_id']))} · {escape(str(selected_ticket['customer_name']))}<span class="brief-priority">{escape(str(selected_ticket['priority']))}</span></div>
-            <div class="brief-copy">{escape(str(selected_ticket['location']))} · {number(selected_ticket['elapsed_hours'], 1)} hours elapsed · {escape(target_text)} · <span class="status-pill {pill_class(selected_ticket['risk_flag'])}">{escape(str(selected_ticket['risk_flag']).replace('_', ' '))}</span></div></div>
-            """
+    with ai_right:
+        html_block('<div class="section-top"><div><div class="section-kicker">SYSTEM HEALTH</div><div class="section-title">Platform readiness</div></div></div><div class="glass-panel system-panel"><div class="health-list">')
+        health_items = [
+            ("Data source", "SQL connected", "good"),
+            ("AI briefing", "Gemini ready" if gemini_ready else "API key needed", "good" if gemini_ready else "warning"),
+            ("Refresh cadence", "5 minutes" if auto_refresh else "Manual", "good" if auto_refresh else "warning"),
+        ]
+        health_html = "".join(
+            f'<div class="health-item"><div class="health-label">{label}</div><div class="health-value {tone}">{value}</div></div>'
+            for label, value, tone in health_items
         )
+        html_block(f'<div class="glass-panel system-panel"><div class="health-list">{health_html}</div></div>')
+        html_block("</div></div>")
+
+    st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
+    bottom_left, bottom_right = st.columns([1.1, 1], gap="large")
+    with bottom_left:
+        html_block('<div class="section-top"><div><div class="section-kicker">ASSET HEALTH</div><div class="section-title">Equipment watchlist</div></div><div class="section-detail">Critical alerts and status</div></div><div class="glass-panel"><div class="watch-list">')
+        if equipment_df.empty:
+            html_block('<div class="empty-state">No assets are in a critical state.</div>')
+        else:
+            rows = []
+            for _, asset in equipment_df.sort_values("critical_alerts", ascending=False).iterrows():
+                rows.append(f'<div class="watch-row"><div><div class="watch-name">{escape(str(asset["equipment_name"]))}</div><div class="watch-meta">{escape(str(asset["equipment_id"]))} · {escape(str(asset["status"]))}</div></div><div><div class="watch-number">{number(asset["critical_alerts"])}</div><div class="watch-caption">critical alerts</div></div></div>')
+            html_block("".join(rows))
+        html_block("</div></div>")
+
+    with bottom_right:
+        html_block('<div class="section-top"><div><div class="section-kicker">DRILL DOWN</div><div class="section-title">Inspect a work order</div></div><div class="section-detail">Filtered priority queue</div></div><div class="glass-panel system-panel">')
+        if risk_df.empty:
+            html_block('<div class="empty-state">Change the filters to select a work order.</div>')
+        else:
+            selected_id = st.selectbox("Choose a work order", risk_df["work_order_id"].tolist(), label_visibility="collapsed")
+            selected_ticket = risk_df.loc[risk_df["work_order_id"].eq(selected_id)].iloc[0]
+            target = selected_ticket["resolution_time_target_hours"]
+            target_text = "No SLA target available" if pd.isna(target) else f"{number(target, 1)} hour resolution target"
+            due_text = "past due_date" if selected_ticket["is_overdue"] else "within due_date"
+            html_block(
+                f"""
+                <div class="brief-item"><div class="brief-top"><span class="brief-dot"></span>{escape(str(selected_ticket['work_order_id']))} · {escape(str(selected_ticket['customer_name']))}<span class="brief-priority">{escape(str(selected_ticket['priority']))}</span></div>
+                <div class="brief-copy">{escape(str(selected_ticket['location']))} · {number(selected_ticket['elapsed_hours'], 1)} hours elapsed · {escape(target_text)} · {escape(due_text)} · <span class="status-pill {pill_class(selected_ticket['risk_flag'])}">{escape(str(selected_ticket['risk_flag']).replace('_', ' '))}</span></div></div>
+                """
+            )
+        html_block("</div>")
+
+# =====================================================================
+# OBSERVE MODE — historical: how has the team and the book of business performed?
+# =====================================================================
+with observe_tab:
+    html_block('<div class="mode-note">Technician performance, dispatch execution, customer trends, and cycle-time history — what happened, and how it compares over time.</div>')
+
+    chart_left, chart_right = st.columns(2, gap="large")
+    with chart_left:
+        html_block('<div class="chart-shell"><div class="chart-label">Operational load by location</div><div class="chart-note">Open cases compared with overdue work orders</div>')
+        zone_chart_data = zones_df.sort_values(["overdue_tickets", "open_tickets"], ascending=False)
+        workload = go.Figure()
+        workload.add_bar(
+            name="Open",
+            x=zone_chart_data["location"],
+            y=zone_chart_data["open_tickets"],
+            marker_color="#61dafb",
+            marker_line_width=0,
+            hovertemplate="%{x}<br>Open work orders: %{y}<extra></extra>",
+        )
+        workload.add_bar(
+            name="Overdue",
+            x=zone_chart_data["location"],
+            y=zone_chart_data["overdue_tickets"],
+            marker_color="#fb7185",
+            marker_line_width=0,
+            hovertemplate="%{x}<br>Overdue work orders: %{y}<extra></extra>",
+        )
+        workload.update_layout(barmode="group", yaxis_title="Work orders", legend={"orientation": "h", "y": 1.12})
+        workload.update_layout(showlegend=True)
+        st.plotly_chart(plot_style(workload), use_container_width=True, config={"displayModeBar": False})
+        html_block("</div>")
+
+    with chart_right:
+        html_block('<div class="chart-shell"><div class="chart-label">Customer confidence</div><div class="chart-note">SLA compliance, uptime, and breach history by account</div>')
+        customers = sla["all_customers"].sort_values("sla_compliance_percent")
+        health_chart = px.bar(
+            customers,
+            x="sla_compliance_percent",
+            y="customer_name",
+            orientation="h",
+            text="sla_compliance_percent",
+            color="sla_compliance_percent",
+            color_continuous_scale=["#fb7185", "#f8bd5a", "#72e6b0"],
+            range_color=[70, 100],
+            labels={"sla_compliance_percent": "Compliance (%)", "customer_name": ""},
+            custom_data=["actual_uptime_percent", "sla_breaches_this_month"],
+        )
+        health_chart.update_traces(
+            texttemplate="%{text:.0f}%",
+            textposition="outside",
+            hovertemplate="%{y}<br>SLA compliance: %{x:.1f}%<br>Uptime: %{customdata[0]:.1f}%<br>Breaches this month: %{customdata[1]}<extra></extra>",
+        )
+        health_chart.update_layout(coloraxis_showscale=False, xaxis={"range": [65, 108]}, yaxis_title=None)
+        st.plotly_chart(plot_style(health_chart), use_container_width=True, config={"displayModeBar": False})
+        html_block("</div>")
+
+    st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
+    obs_left, obs_right = st.columns([1.3, 1], gap="large")
+    with obs_left:
+        html_block('<div class="section-top"><div><div class="section-kicker">FIELD TEAM</div><div class="section-title">Technician performance rankings</div></div><div class="section-detail">Completion rate · avg response time</div></div>')
+        tech_display = technicians_df.rename(columns={
+            "name": "Technician",
+            "location": "Location",
+            "status": "Status",
+            "skills": "Skills",
+            "total_assignments": "Assignments",
+            "completion_rate_percent": "Completion %",
+            "avg_response_time_hours": "Avg Response (h)",
+        })[["Technician", "Location", "Status", "Skills", "Assignments", "Completion %", "Avg Response (h)"]]
+        st.dataframe(tech_display, use_container_width=True, hide_index=True)
+
+    with obs_right:
+        html_block('<div class="section-top"><div><div class="section-kicker">FIELD EXECUTION</div><div class="section-title">Dispatch performance</div></div></div><div class="glass-panel system-panel"><div class="health-list" style="grid-template-columns:1fr">')
+        dispatch_items = [
+            ("Avg dispatch-to-arrival", f"{number(dispatch['average_response_time_hours'], 2)} hours", "good"),
+            ("Avg customer feedback", f"{number(dispatch['average_customer_feedback'], 2)} / 5", "good"),
+        ]
+        dispatch_html = "".join(
+            f'<div class="health-item"><div class="health-label">{label}</div><div class="health-value {tone}">{value}</div></div>'
+            for label, value, tone in dispatch_items
+        )
+        breakdown = ", ".join(f"{k}: {v}" for k, v in dispatch["dispatch_status_breakdown"].items())
+        html_block(f'<div class="glass-panel system-panel"><div class="health-list" style="grid-template-columns:1fr">{dispatch_html}<div class="health-item"><div class="health-label">Dispatch status mix</div><div class="health-value">{escape(breakdown)}</div></div></div></div>')
+        html_block("</div></div>")
+
+    st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
+    html_block('<div class="chart-shell"><div class="chart-label">Work order cycle-time trend</div><div class="chart-note">Average resolution time for completed work, by creation date</div>')
+    if cycle_df.empty:
+        html_block('<div class="empty-state">Not enough completed work orders yet to plot a trend.</div>')
+    else:
+        trend_chart = go.Figure()
+        trend_chart.add_scatter(
+            x=cycle_df["date"].astype(str),
+            y=cycle_df["avg_resolution_time_hours"],
+            mode="lines+markers",
+            line={"color": "#61dafb", "width": 2.5},
+            marker={"size": 7, "color": "#9b8afb"},
+            hovertemplate="%{x}<br>Avg resolution time: %{y:.1f}h<extra></extra>",
+        )
+        trend_chart.update_layout(yaxis_title="Avg resolution time (hours)", xaxis_title=None)
+        st.plotly_chart(plot_style(trend_chart, height=260), use_container_width=True, config={"displayModeBar": False})
     html_block("</div>")
+
+# =====================================================================
+# EXPLORE MODE — strategic: what should we plan for next?
+# =====================================================================
+with explore_tab:
+    html_block('<div class="mode-note">Preventive maintenance, skill-based resourcing, customer risk scoring, and bottleneck analysis — forward-looking signals for planning.</div>')
+
+    exp_left, exp_right = st.columns([1.2, 1], gap="large")
+    with exp_left:
+        html_block('<div class="section-top"><div><div class="section-kicker">PREVENTIVE MAINTENANCE</div><div class="section-title">Equipment nearing its service window</div></div><div class="section-detail">Overdue or due within 30 days</div></div><div class="glass-panel"><div class="watch-list">')
+        if maintenance_df.empty:
+            html_block('<div class="empty-state">No equipment is overdue or due soon for maintenance.</div>')
+        else:
+            rows = []
+            for _, asset in maintenance_df.iterrows():
+                days = asset["days_until_due"]
+                day_text = f"{abs(int(days))} days overdue" if days < 0 else f"due in {int(days)} days"
+                rows.append(
+                    f'<div class="watch-row"><div><div class="watch-name">{escape(str(asset["equipment_name"]))}</div><div class="watch-meta">{escape(str(asset["equipment_id"]))} · {escape(str(asset["location"]))}</div></div><div><span class="status-pill {pill_class(asset["maintenance_status"])}">{escape(str(asset["maintenance_status"]).replace("_", " "))}</span><div class="watch-caption">{escape(day_text)}</div></div></div>'
+                )
+            html_block("".join(rows))
+        html_block("</div></div>")
+
+    with exp_right:
+        html_block('<div class="section-top"><div><div class="section-kicker">CUSTOMER RISK</div><div class="section-title">Accounts at risk of churn</div></div><div class="section-detail">Ranked by compliance, breaches, uptime</div></div>')
+        risk_score_df = sla["all_customers"].copy()
+        risk_score_df["risk_score"] = (
+            (100 - risk_score_df["sla_compliance_percent"]) * 0.5
+            + risk_score_df["sla_breaches_this_month"] * 8
+            + (100 - risk_score_df["actual_uptime_percent"]) * 0.5
+        ).round(1)
+        risk_score_df = risk_score_df.sort_values("risk_score", ascending=False)
+        risk_display = risk_score_df.rename(columns={
+            "customer_name": "Customer",
+            "sla_tier": "Tier",
+            "sla_compliance_percent": "Compliance %",
+            "sla_breaches_this_month": "Breaches (mo.)",
+            "actual_uptime_percent": "Uptime %",
+            "risk_score": "Risk Score",
+        })[["Customer", "Tier", "Compliance %", "Breaches (mo.)", "Uptime %", "Risk Score"]]
+        st.dataframe(risk_display, use_container_width=True, hide_index=True)
+        st.caption("Risk score is a simple weighted blend of compliance shortfall, monthly breaches, and uptime shortfall — higher means more attention needed, not a contractual metric.")
+
+    st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
+    exp2_left, exp2_right = st.columns([1.2, 1], gap="large")
+    with exp2_left:
+        html_block('<div class="section-top"><div><div class="section-kicker">RESOURCE ALLOCATION</div><div class="section-title">Best technician for open work</div></div><div class="section-detail">Skill-matched, ranked by completion rate</div></div>')
+        if skill_df.empty:
+            html_block('<div class="glass-panel"><div class="empty-state">No open work orders need reassignment right now.</div></div>')
+        else:
+            skill_display = skill_df.rename(columns={
+                "work_order_id": "Work Order",
+                "issue_type": "Issue Type",
+                "location": "Location",
+                "current_technician": "Currently Assigned",
+                "recommended_technician": "Recommended",
+                "match_basis": "Match Basis",
+                "recommended_completion_rate": "Completion %",
+            })
+            st.dataframe(skill_display, use_container_width=True, hide_index=True)
+
+    with exp2_right:
+        html_block('<div class="section-top"><div><div class="section-kicker">BOTTLENECK ANALYSIS</div><div class="section-title">Slowest issue types</div></div><div class="section-detail">Avg resolution time, by category</div></div>')
+        bottleneck_chart_df = bottleneck_df.dropna(subset=["avg_resolution_time_hours"])
+        if bottleneck_chart_df.empty:
+            html_block('<div class="glass-panel"><div class="empty-state">Not enough completed data yet to rank bottlenecks.</div></div>')
+        else:
+            bottleneck_chart = px.bar(
+                bottleneck_chart_df.sort_values("avg_resolution_time_hours"),
+                x="avg_resolution_time_hours",
+                y="issue_type",
+                orientation="h",
+                text="avg_resolution_time_hours",
+                labels={"avg_resolution_time_hours": "Avg resolution time (h)", "issue_type": ""},
+            )
+            bottleneck_chart.update_traces(
+                marker_color="#f8bd5a",
+                texttemplate="%{text:.1f}h",
+                textposition="outside",
+                hovertemplate="%{y}<br>Avg resolution time: %{x:.1f}h<extra></extra>",
+            )
+            st.plotly_chart(plot_style(bottleneck_chart, height=280), use_container_width=True, config={"displayModeBar": False})
 
 html_block('<div class="footer-note">SwiftServe Operations Intelligence · Live SQL Server data · AI briefings are generated only when requested</div>')
