@@ -56,6 +56,10 @@ def kpi_tickets_at_risk(work_orders: pd.DataFrame, sla_metrics: pd.DataFrame,
     )
 
     merged["elapsed_hours"] = (as_of_date - merged["created_date"]).dt.total_seconds() / 3600
+    # Separate from the SLA-target risk flag below: this is a direct
+    # "is it past its contractual due_date" check, since ACT mode asks
+    # for overdue-by-due_date specifically, not just SLA-window risk.
+    merged["is_overdue"] = merged["due_date"] < as_of_date
 
     def flag(row):
         if pd.isna(row["resolution_time_target_hours"]):
@@ -69,14 +73,15 @@ def kpi_tickets_at_risk(work_orders: pd.DataFrame, sla_metrics: pd.DataFrame,
     merged["risk_flag"] = merged.apply(flag, axis=1)
 
     return merged[["work_order_id", "customer_name", "location", "priority",
-                    "elapsed_hours", "resolution_time_target_hours", "risk_flag"]]
+                    "due_date", "is_overdue", "elapsed_hours",
+                    "resolution_time_target_hours", "risk_flag"]]
 
 
 # ---------------------------------------------------------------------
 # ASK: are we honoring our SLA contracts this month?
 # ANSWER: compliance % per customer, plus who's below a safe threshold
 # ---------------------------------------------------------------------
-def kpi_sla_compliance(sla_metrics: pd.DataFrame, breach_threshold=90) -> dict:
+def kpi_sla_compliance(sla_metrics: pd.DataFrame, breach_threshold=95) -> dict:
     at_risk_customers = sla_metrics[sla_metrics["sla_compliance_percent"] < breach_threshold]
     all_customers = sla_metrics[
         ["customer_name", "sla_tier", "sla_compliance_percent",
@@ -177,6 +182,150 @@ def kpi_zone_summary(work_orders: pd.DataFrame, as_of_date=None) -> pd.DataFrame
 
 
 # ---------------------------------------------------------------------
+# ASK (EXPLORE): which assets are heading into a maintenance window soon,
+#      before they become a critical/degraded risk?
+# ANSWER: equipment whose next_maintenance_due has already passed, or
+#         falls within `due_soon_days` of the latest known activity in
+#         the dataset. last_maintenance.max() stands in for "today"
+#         since this is a fixed historical demo dataset, not a live feed.
+# ---------------------------------------------------------------------
+def kpi_maintenance_due(equipment: pd.DataFrame, as_of_date=None, due_soon_days=30) -> pd.DataFrame:
+    df = equipment.copy()
+    for col in ["last_maintenance", "next_maintenance_due"]:
+        df[col] = pd.to_datetime(df[col], errors="coerce")
+
+    if as_of_date is None:
+        as_of_date = df["last_maintenance"].max()
+
+    df["days_until_due"] = (df["next_maintenance_due"] - as_of_date).dt.days
+
+    def flag(days):
+        if pd.isna(days):
+            return "NO_SCHEDULE"
+        if days < 0:
+            return "OVERDUE"
+        if days <= due_soon_days:
+            return "DUE_SOON"
+        return "SCHEDULED"
+
+    df["maintenance_status"] = df["days_until_due"].apply(flag)
+
+    upcoming = df[df["maintenance_status"].isin(["OVERDUE", "DUE_SOON"])]
+    return upcoming[["equipment_id", "equipment_name", "location", "status",
+                      "next_maintenance_due", "days_until_due", "maintenance_status"]] \
+        .sort_values("days_until_due")
+
+
+# ---------------------------------------------------------------------
+# ASK (EXPLORE): for open work, which available technician is the best
+#      fit -- matching the job's issue_type against each active
+#      technician's listed skills?
+# ANSWER: a deterministic skill-keyword match per open work order,
+#         ranked by the technician's completion rate. Falls back to
+#         "best available technician in that location" if no skill
+#         keyword matches, since not every issue_type has a clean
+#         one-word skill equivalent in this dataset.
+# ---------------------------------------------------------------------
+_ISSUE_SKILL_MAP = {
+    "Equipment Failure": ["Repairs", "Diagnostics"],
+    "Maintenance Check": ["Maintenance"],
+    "Preventive Maintenance": ["Preventive Maintenance", "Maintenance"],
+    "Installation": ["Installation"],
+    "Troubleshooting": ["Troubleshooting", "Diagnostics"],
+    "Emergency Repair": ["Repairs"],
+    "Equipment Diagnostics": ["Diagnostics"],
+}
+
+
+def kpi_skill_match(work_orders: pd.DataFrame, technicians: pd.DataFrame) -> pd.DataFrame:
+    open_df = work_orders[work_orders["status"] != "Completed"].copy()
+    active_techs = technicians[technicians["status"] == "Active"].copy()
+    active_techs["completion_rate_percent"] = (
+        active_techs["completed_assignments"] / active_techs["total_assignments"] * 100
+    ).round(1)
+
+    rows = []
+    for _, ticket in open_df.iterrows():
+        keywords = _ISSUE_SKILL_MAP.get(ticket["issue_type"], [])
+        candidates = (
+            active_techs[active_techs["skills"].apply(lambda s: any(k in s for k in keywords))]
+            if keywords else active_techs.iloc[0:0]
+        )
+
+        match_basis = "Skill match"
+        if candidates.empty:
+            candidates = active_techs[active_techs["location"] == ticket["location"]]
+            match_basis = "Location match" if not candidates.empty else "No candidate available"
+
+        if not candidates.empty:
+            best = candidates.sort_values("completion_rate_percent", ascending=False).iloc[0]
+            recommended, completion_rate = best["name"], best["completion_rate_percent"]
+        else:
+            recommended, completion_rate = "N/A", None
+
+        rows.append({
+            "work_order_id": ticket["work_order_id"],
+            "issue_type": ticket["issue_type"],
+            "location": ticket["location"],
+            "current_technician": ticket["assigned_technician"],
+            "recommended_technician": recommended,
+            "match_basis": match_basis,
+            "recommended_completion_rate": completion_rate,
+        })
+
+    return pd.DataFrame(rows)
+
+
+# ---------------------------------------------------------------------
+# ASK (OBSERVE): is resolution time getting faster or slower over time?
+# ANSWER: average resolution time for completed work orders, grouped by
+#         the date each work order was created.
+# ---------------------------------------------------------------------
+def kpi_cycle_time_trends(work_orders: pd.DataFrame) -> pd.DataFrame:
+    df = work_orders.copy()
+    df["created_date"] = pd.to_datetime(df["created_date"], errors="coerce")
+    completed = df[df["status"] == "Completed"].copy()
+    completed["resolution_time_hours"] = pd.to_numeric(
+        completed["resolution_time_hours"], errors="coerce"
+    )
+
+    trend = completed.groupby(completed["created_date"].dt.date).agg(
+        avg_resolution_time_hours=("resolution_time_hours", "mean"),
+        completed_count=("work_order_id", "count"),
+    ).reset_index().rename(columns={"created_date": "date"})
+
+    return trend.sort_values("date")
+
+
+# ---------------------------------------------------------------------
+# ASK (EXPLORE): what's actually slowing resolution down -- a particular
+#      issue type, rather than a particular zone?
+# ANSWER: average resolution time and open/overdue counts grouped by
+#         issue_type, ranked so the slowest category surfaces first.
+# ---------------------------------------------------------------------
+def kpi_bottleneck_analysis(work_orders: pd.DataFrame, as_of_date=None) -> pd.DataFrame:
+    df = work_orders.copy()
+    for col in ["created_date", "due_date"]:
+        df[col] = pd.to_datetime(df[col], errors="coerce")
+    df["resolution_time_hours"] = pd.to_numeric(df["resolution_time_hours"], errors="coerce")
+
+    if as_of_date is None:
+        as_of_date = df["due_date"].max()
+
+    df["is_open"] = df["status"] != "Completed"
+    df["is_overdue"] = df["is_open"] & (df["due_date"] < as_of_date)
+
+    summary = df.groupby("issue_type").agg(
+        avg_resolution_time_hours=("resolution_time_hours", "mean"),
+        open_count=("is_open", "sum"),
+        overdue_count=("is_overdue", "sum"),
+        total_count=("work_order_id", "count"),
+    ).reset_index()
+
+    return summary.sort_values("avg_resolution_time_hours", ascending=False, na_position="last")
+
+
+# ---------------------------------------------------------------------
 # Orchestrator -- pulls every KPI into one summary dict, live from SQL Server
 # ---------------------------------------------------------------------
 def build_kpi_summary() -> dict:
@@ -195,6 +344,10 @@ def build_kpi_summary() -> dict:
         "dispatch_performance": kpi_dispatch_performance(dispatch_logs),
         "overdue_invoices": kpi_overdue_invoices(),
         "zone_summary": kpi_zone_summary(work_orders),
+        "maintenance_due": kpi_maintenance_due(equipment),
+        "skill_match": kpi_skill_match(work_orders, technicians),
+        "cycle_time_trends": kpi_cycle_time_trends(work_orders),
+        "bottleneck_analysis": kpi_bottleneck_analysis(work_orders),
     }
 
 
@@ -224,3 +377,15 @@ if __name__ == "__main__":
 
     print("\n=== ZONE SUMMARY ===")
     print(summary["zone_summary"].to_string(index=False))
+
+    print("\n=== MAINTENANCE DUE ===")
+    print(summary["maintenance_due"].to_string(index=False))
+
+    print("\n=== SKILL MATCH ===")
+    print(summary["skill_match"].to_string(index=False))
+
+    print("\n=== CYCLE TIME TRENDS ===")
+    print(summary["cycle_time_trends"].to_string(index=False))
+
+    print("\n=== BOTTLENECK ANALYSIS ===")
+    print(summary["bottleneck_analysis"].to_string(index=False))
